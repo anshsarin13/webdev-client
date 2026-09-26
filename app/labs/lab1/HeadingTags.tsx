@@ -1,23 +1,34 @@
 export default function HeadingTags() {
   return (
     <div>
-      <h4>Heading Tags</h4>
-      <p>
-        HTML provides six levels of headings, h1 through h6, used to
-        structure content from most important to least important.
-      </p>
+      <div id="wd-h-tag">
+        <h4>Heading Tags</h4>
+        Text documents are often broken up into several sections and subsections.
+        Each section is usually prefaced with a short title or heading that
+        attempts to summarize the topic of the section it precedes. For instance
+        this paragraph is preceded by the heading Heading Tags. The font of the
+        section headings are usually larger and bolder than their subsection
+        headings. This document uses headings to introduce topics such as HTML
+        Documents, HTML Tags, Heading Tags, etc. HTML heading tags can be used
+        to format plain text so that it renders in a browser as large headings.
+        There are 6 heading tags for different sizes: h1, h2, h3, h4, h5, and
+        h6. Tag h1 is the largest heading and h6 is the smallest heading. A{" "}
+        <span id="wd-inline-span">span</span> sits in this sentence without
+        starting a new line.
 
-      <h1>Heading 1</h1>
-      <h2>Heading 2</h2>
-      <h3>Heading 3</h3>
-      <h4>Heading 4</h4>
-      <h5>Heading 5</h5>
-      <h6>Heading 6</h6>
+        <h1>h1</h1>
+        <h2>h2</h2>
+        <h3>h3</h3>
+        <h4>h4</h4>
+        <h5>h5</h5>
+        <h6>h6</h6>
+      </div>
 
       <div id="wd-your-heading">
-        <h2>
-          Web Development <span id="wd-your-span">Fall 2026</span>
-        </h2>
+        <h4>Hi, I'm Ansh</h4>
+        I'm a co-op student at{" "}
+        <span id="wd-your-span">Northeastern</span> learning Web Dev this
+        semester.
       </div>
 
       <div id="wd-ai-headings">

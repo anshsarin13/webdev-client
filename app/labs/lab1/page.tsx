@@ -2,8 +2,11 @@ import HeadingTags from "./HeadingTags";
 
 export default function Lab1() {
   return (
-    <div>
+    <div id="wd-lab1">
+      <h2>Lab 1</h2>
+      <h3>HTML Examples</h3>
       <HeadingTags />
+      {/* do the next exercise here */}
     </div>
   );
 }
