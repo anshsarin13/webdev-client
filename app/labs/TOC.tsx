@@ -18,7 +18,13 @@ export default function TOC() {
             Chapter 1
           </a>
         </li>
+        <li>
+          <Link href="/" id="wd-kambaz-link">
+            Kambaz
+          </Link>
+        </li>
       </ul>
+      <p>Ansh Sarin doing lab 1 </p>
     </nav>
   );
 }

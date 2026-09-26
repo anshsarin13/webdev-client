@@ -42,8 +42,9 @@ export default function HighlightedBoxLab() {
       >
         <h4>Callout</h4>
         <p>
-          This box wraps <strong>any</strong>{" "}children — headings, paragraphs,
-          lists, and more.        </p>
+          This box wraps <strong>any</strong> children: headings, paragraphs,
+          lists, and more.
+        </p>
         <ul>
           <li>backgroundColor</li>
           <li>borderColor</li>
@@ -67,7 +68,7 @@ export default function HighlightedBoxLab() {
       </HighlightedBox>
 
       <HighlightedBox
-        backgroundColor="honeydrew"
+        backgroundColor="honeydew"
         borderColor="seagreen"
         borderWidth={2}
         borderRadius={4}

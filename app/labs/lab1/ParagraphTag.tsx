@@ -25,11 +25,11 @@ export default function ParagraphTag() {
       </p>
 
       <p id="wd-p-your-1">
-        I'm originally from India and I'm doing a co-op at
+        I&apos;m originally from India and I&apos;m doing a co-op at
         Waterside Group this semester.
       </p>
       <p id="wd-p-your-2">
-        In this course I'm hoping to get comfortable with web dev and
+        In this course I&apos;m hoping to get comfortable with web dev and
         build out the Kambaz project from scratch.
       </p>
 
