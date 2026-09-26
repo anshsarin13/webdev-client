@@ -25,9 +25,9 @@ export default function HeadingTags() {
       </div>
 
       <div id="wd-your-heading">
-        <h4>Hi, I'm Ansh</h4>
-        I'm a co-op student at{" "}
-        <span id="wd-your-span">Northeastern</span> learning Web Dev this
+        <h4>Hi, I&apos;m Ansh</h4>
+        I&apos;m a co-op student at{" "}
+        <span id="wd-your-span">Northeastern</span> learning Next.js this
         semester.
       </div>
 

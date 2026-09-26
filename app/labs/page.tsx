@@ -1,0 +1,21 @@
+import Link from "next/link";
+
+export default function Labs() {
+  return (
+    <div id="wd-labs">
+      <h1>Labs</h1>
+      <h4>Ansh Sarin</h4>
+      <ul>
+        <li>
+          <Link href="/labs/lab1">Lab 1: HTML Examples</Link>
+        </li>
+      </ul>
+      <a
+        href="https://github.com/anshsarin13/webdev-client"
+        id="wd-github"
+      >
+        GitHub Repository
+      </a>
+    </div>
+  );
+}
