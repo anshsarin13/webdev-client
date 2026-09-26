@@ -5,10 +5,14 @@ export default function TOC() {
     <nav>
       <ul>
         <li>
-          <Link href="/labs">Labs</Link>
+          <Link href="/labs" id="wd-home-link">
+            Labs
+          </Link>
         </li>
         <li>
-          <Link href="/labs/lab1">Lab 1</Link>
+          <Link href="/labs/lab1" id="wd-lab1-link">
+            Lab 1
+          </Link>
         </li>
         <li>
           <a
