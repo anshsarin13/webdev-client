@@ -6,6 +6,8 @@ import TailwindResponsiveBreakpoint from "./TailwindResponsiveBreakpoint";
 import TailwindResponsiveShowHide from "./TailwindResponsiveShowHide";
 import TailwindResponsiveFlex from "./TailwindResponsiveFlex";
 import TailwindResponsiveGrid from "./TailwindResponsiveGrid";
+import TailwindResponsiveSpacingText from "./TailwindResponsiveSpacingText";
+import TailwindResponsiveDesign from "./TailwindResponsiveDesign";
 import TailwindFilters from "./TailwindFilters";
 import TailwindGrids from "./TailwindGrids";
 export default function TailwindLab() {
@@ -23,6 +25,8 @@ export default function TailwindLab() {
       <TailwindResponsiveShowHide />
       <TailwindResponsiveFlex />
       <TailwindResponsiveGrid />
+      <TailwindResponsiveSpacingText />
+      <TailwindResponsiveDesign />
       <hr className="my-8" />
       <TailwindFilters />
       <hr className="my-8" />
