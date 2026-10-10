@@ -15,6 +15,11 @@ export default function TOC() {
           </Link>
         </li>
         <li>
+          <Link href="/labs/lab2" id="wd-lab2-link">
+            Lab 2
+          </Link>
+        </li>
+        <li>
           <a
             href="https://kambaz.dev/book/ch1#sec-1-3"
             id="wd-toc-book-link"
