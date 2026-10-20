@@ -6,17 +6,15 @@ import { AiOutlineDashboard } from "react-icons/ai";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegCalendar, FaInbox, FaFlask, FaBook } from "react-icons/fa6";
 
-// "Courses" jumps straight into the first course (same id the Dashboard's
-// first CourseCard links to) since there's no standalone courses listing
-// page, just /dashboard (cards) and /courses/[cid]/... (one course).
-const DEFAULT_COURSE_ID = "1234";
-
+// "Courses" points at /dashboard because a course is only reached from a
+// dashboard card; it highlights once the URL is inside /courses/...
 const LINKS = [
   { href: "/dashboard", id: "wd-dashboard-link", label: "Dashboard", icon: AiOutlineDashboard, match: "/dashboard" },
-  { href: `/courses/${DEFAULT_COURSE_ID}/home`, id: "wd-course-link", label: "Courses", icon: FaBook, match: "/courses" },
+  { href: "/dashboard", id: "wd-courses-link", label: "Courses", icon: FaBook, match: "/courses" },
   { href: "/calendar", id: "wd-calendar-link", label: "Calendar", icon: FaRegCalendar, match: "/calendar" },
   { href: "/inbox", id: "wd-inbox-link", label: "Inbox", icon: FaInbox, match: "/inbox" },
   { href: "/labs", id: "wd-labs-link", label: "Labs", icon: FaFlask, match: "/labs" },
+  { href: "/history", id: "wd-history-link", label: "History", icon: FaRegCalendar, match: "/history" },
 ];
 
 export default function KambazNavigation() {

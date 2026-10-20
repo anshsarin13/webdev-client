@@ -1,11 +1,13 @@
 import Link from "next/link";
+import * as db from "../../../../database";
 
 export default async function AssignmentEditor({
   params,
 }: {
-  params: Promise<{ cid: string }>;
+  params: Promise<{ cid: string; aid: string }>;
 }) {
-  const { cid } = await params;
+  const { cid, aid } = await params;
+  const assignment = db.assignments.find((a) => a._id === aid);
   return (
     <div id="wd-assignments-editor" className="max-w-3xl">
       <label htmlFor="wd-name" className="mb-1 block text-sm font-medium">
@@ -13,13 +15,17 @@ export default async function AssignmentEditor({
       </label>
       <input
         id="wd-name"
-        defaultValue="A1 - ENV + HTML"
+        defaultValue={assignment?.title ?? ""}
         className="mb-4 w-full rounded border border-neutral-300 px-3 py-2 text-sm"
       />
 
+      <p id="wd-assignment-id" className="mb-4 text-sm text-neutral-600">
+        Assignment id: {aid}
+      </p>
+
       <textarea
         id="wd-description"
-        defaultValue="The assignment is available online. Submit a link to the landing page of your deployed Next.js app."
+        defaultValue={assignment?.description ?? ""}
         rows={6}
         className="mb-4 w-full rounded border border-neutral-300 px-3 py-2 text-sm"
       />
@@ -33,7 +39,7 @@ export default async function AssignmentEditor({
             <td className="p-2">
               <input
                 id="wd-points"
-                defaultValue={100}
+                defaultValue={assignment?.points ?? 100}
                 className="w-full rounded border border-neutral-300 px-3 py-2"
               />
             </td>
@@ -125,6 +131,7 @@ export default async function AssignmentEditor({
               <input
                 id="wd-due-date"
                 type="date"
+                defaultValue={assignment?.due}
                 className="w-full rounded border border-neutral-300 px-3 py-2"
               />
             </td>
@@ -137,6 +144,7 @@ export default async function AssignmentEditor({
               <input
                 id="wd-available-from"
                 type="date"
+                defaultValue={assignment?.available}
                 className="w-full rounded border border-neutral-300 px-3 py-2"
               />
             </td>
