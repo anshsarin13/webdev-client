@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -6,11 +7,21 @@ export default function CourseCard({
   name,
   description,
   image,
+  onEdit,
+  onDelete,
+  enrolled,
+  onEnroll,
+  onUnenroll,
 }: {
   _id: string;
   name: string;
   description: string;
   image: string;
+  onEdit: () => void;
+  onDelete: () => void;
+  enrolled: boolean | null;
+  onEnroll: () => void;
+  onUnenroll: () => void;
 }) {
   return (
     <div className="wd-dashboard-course w-[300px] max-w-full overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
@@ -38,6 +49,54 @@ export default function CourseCard({
           >
             Go
           </button>
+          <button
+            type="button"
+            id="wd-edit-course-click"
+            className="ms-2 inline-flex items-center justify-center rounded bg-yellow-400 px-3 py-1.5 text-sm font-medium"
+            onClick={(event) => {
+              event.preventDefault();
+              onEdit();
+            }}
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            id="wd-delete-course-click"
+            className="ms-2 inline-flex items-center justify-center rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
+            onClick={(event) => {
+              event.preventDefault();
+              onDelete();
+            }}
+          >
+            Delete
+          </button>
+          {enrolled === true && (
+            <button
+              type="button"
+              id="wd-unenroll-course-click"
+              className="ms-2 inline-flex items-center justify-center rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
+              onClick={(event) => {
+                event.preventDefault();
+                onUnenroll();
+              }}
+            >
+              Unenroll
+            </button>
+          )}
+          {enrolled === false && (
+            <button
+              type="button"
+              id="wd-enroll-course-click"
+              className="ms-2 inline-flex items-center justify-center rounded bg-green-600 px-3 py-1.5 text-sm font-medium text-white"
+              onClick={(event) => {
+                event.preventDefault();
+                onEnroll();
+              }}
+            >
+              Enroll
+            </button>
+          )}
         </div>
       </Link>
     </div>

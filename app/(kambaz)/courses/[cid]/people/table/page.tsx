@@ -1,16 +1,18 @@
+"use client";
+import { useParams } from "next/navigation";
 import { FaUserCircle } from "react-icons/fa";
 import * as db from "../../../../database";
+import { useEnrollmentsStore } from "../../../../store/enrollmentsStore";
 
-export default async function PeopleTable({
-  params,
-}: {
-  params: Promise<{ cid: string }>;
-}) {
-  const { cid } = await params;
-  const { users, enrollments } = db;
+export default function PeopleTable() {
+  const { cid } = useParams();
+  const courseId = typeof cid === "string" ? cid : "";
+  const enrollments = useEnrollmentsStore((state) => state.enrollments);
+  const { users } = db;
   const enrolled = users.filter((usr) =>
     enrollments.some(
-      (enrollment) => enrollment.user === usr._id && enrollment.course === cid,
+      (enrollment) =>
+        enrollment.user === usr._id && enrollment.course === courseId,
     ),
   );
   return (
