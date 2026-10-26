@@ -1,16 +1,24 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import AssignmentItem from "./AssignmentItem";
-import * as db from "../../../database";
+import DeleteAssignmentDialog from "./DeleteAssignmentDialog";
+import { useAssignmentsStore } from "../../../store/assignmentsStore";
 
-export default async function Assignments({
-  params,
-}: {
-  params: Promise<{ cid: string }>;
-}) {
-  const { cid } = await params;
-  const assignments = db.assignments.filter(
-    (assignment) => assignment.course === cid,
+export default function Assignments() {
+  const { cid } = useParams();
+  const courseId = typeof cid === "string" ? cid : "";
+  const allAssignments = useAssignmentsStore((state) => state.assignments);
+  const deleteAssignment = useAssignmentsStore(
+    (state) => state.deleteAssignment,
   );
+  const [toDelete, setToDelete] = useState<string | null>(null);
+  const assignments = allAssignments.filter(
+    (assignment) => assignment.course === courseId,
+  );
+  const pending = assignments.find((a) => a._id === toDelete);
   return (
     <div id="wd-assignments">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -30,13 +38,13 @@ export default async function Assignments({
           >
             <FaPlus /> Group
           </button>
-          <button
+          <Link
             id="wd-add-assignment"
-            type="button"
-            className="inline-flex items-center gap-1 rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
+            href={`/courses/${courseId}/assignments/new`}
+            className="inline-flex items-center gap-1 rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white no-underline"
           >
             <FaPlus /> Assignment
-          </button>
+          </Link>
         </div>
       </div>
       <h3
@@ -55,13 +63,23 @@ export default async function Assignments({
         {assignments.map((assignment) => (
           <AssignmentItem
             key={assignment._id}
-            cid={cid}
+            cid={courseId}
             aid={assignment._id}
             title={assignment.title}
             details={`Multiple Modules | Not available until ${assignment.available} | Due ${assignment.due} | ${assignment.points} pts`}
+            onDelete={() => setToDelete(assignment._id)}
           />
         ))}
       </ul>
+      <DeleteAssignmentDialog
+        show={toDelete !== null && pending !== undefined}
+        title={pending?.title ?? ""}
+        onNo={() => setToDelete(null)}
+        onYes={() => {
+          if (toDelete) deleteAssignment(toDelete);
+          setToDelete(null);
+        }}
+      />
     </div>
   );
 }
