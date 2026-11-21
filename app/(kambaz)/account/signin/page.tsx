@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import * as db from "../../database";
+import * as client from "../client";
 import { useAccountContext } from "../AccountContext";
 
 export default function Signin() {
@@ -11,16 +11,19 @@ export default function Signin() {
     password: "",
   });
   const { setCurrentUser } = useAccountContext();
+  const [error, setError] = useState("");
   const router = useRouter();
-  const signin = () => {
-    const user = db.users.find(
-      (u) =>
-        u.username === credentials.username &&
-        u.password === credentials.password,
-    );
-    if (!user) return;
-    setCurrentUser(user);
-    router.push("/dashboard");
+  const signin = async () => {
+    try {
+      const user = await client.signin(credentials);
+      setCurrentUser(user);
+      setError("");
+      router.push("/dashboard");
+    } catch (e) {
+      setError(
+        client.errorMessage(e, "Could not sign in. Is the server running?"),
+      );
+    }
   };
   return (
     <div id="wd-signin-screen" className="mx-auto max-w-xs">
@@ -44,6 +47,11 @@ export default function Signin() {
           setCredentials({ ...credentials, password: e.target.value })
         }
       />
+      {error && (
+        <div id="wd-signin-error" className="mb-2 rounded bg-red-100 p-2 text-sm text-red-800">
+          {error}
+        </div>
+      )}
       <button
         type="button"
         onClick={signin}

@@ -1,20 +1,20 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { FaUserCircle } from "react-icons/fa";
-import * as db from "../../../../database";
-import { useEnrollmentsStore } from "../../../../store/enrollmentsStore";
+import * as client from "../../../../account/client";
 
 export default function PeopleTable() {
   const { cid } = useParams();
   const courseId = typeof cid === "string" ? cid : "";
-  const enrollments = useEnrollmentsStore((state) => state.enrollments);
-  const { users } = db;
-  const enrolled = users.filter((usr) =>
-    enrollments.some(
-      (enrollment) =>
-        enrollment.user === usr._id && enrollment.course === courseId,
-    ),
-  );
+  const [enrolled, setEnrolled] = useState<client.User[]>([]);
+  useEffect(() => {
+    if (!courseId) return;
+    client
+      .findUsersForCourse(courseId)
+      .then(setEnrolled)
+      .catch(() => setEnrolled([]));
+  }, [courseId]);
   return (
     <div id="wd-people-table" className="overflow-x-auto">
       <table className="w-full border-collapse text-left text-sm">

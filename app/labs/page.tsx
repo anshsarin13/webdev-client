@@ -29,12 +29,6 @@ export default function Labs() {
           </Link>
         </li>
       </ul>
-      <a
-        href="https://github.com/anshsarin13/webdev-client"
-        id="wd-github"
-      >
-        GitHub Repository
-      </a>
     </div>
   );
 }
