@@ -2,6 +2,8 @@
 import { useState } from "react";
 import CourseCard from "./CourseCard";
 import { useAccountContext } from "../account/AccountContext";
+import * as coursesClient from "../courses/client";
+import * as enrollmentsClient from "../enrollments/client";
 import { useEnrollmentsStore } from "../store/enrollmentsStore";
 import {
   emptyCourse,
@@ -17,8 +19,61 @@ export default function Dashboard() {
   const [course, setCourse] = useState<Course>(emptyCourse);
   const { currentUser } = useAccountContext();
   const enrollments = useEnrollmentsStore((state) => state.enrollments);
-  const enroll = useEnrollmentsStore((state) => state.enroll);
-  const unenroll = useEnrollmentsStore((state) => state.unenroll);
+  const addEnrollment = useEnrollmentsStore((state) => state.addEnrollment);
+  const removeEnrollment = useEnrollmentsStore(
+    (state) => state.removeEnrollment,
+  );
+  const [error, setError] = useState("");
+  const run = async (action: () => Promise<void>) => {
+    try {
+      await action();
+      setError("");
+    } catch (e) {
+      const data = (e as { response?: { data?: { message?: string } } })
+        ?.response?.data;
+      setError(data?.message ?? "Request failed. Is the server running?");
+    }
+  };
+  const onAddCourse = () =>
+    run(async () => {
+      const { _id, ...fields } = course;
+      void _id;
+      const created = await coursesClient.createCourse(fields);
+      addCourse(created);
+      // The server enrolls the signed-in creator, so mirror that here.
+      if (currentUser) {
+        addEnrollment({
+          _id: `${currentUser._id}-${created._id}`,
+          user: currentUser._id,
+          course: created._id,
+        });
+      }
+    });
+  const onUpdateCourse = () =>
+    run(async () => {
+      const updated = await coursesClient.updateCourse(course);
+      updateCourse(updated);
+    });
+  const onDeleteCourse = (courseId: string) =>
+    run(async () => {
+      await coursesClient.deleteCourse(courseId);
+      deleteCourse(courseId);
+    });
+  const onEnroll = (courseId: string) =>
+    run(async () => {
+      if (!currentUser) return;
+      const enrollment = await enrollmentsClient.enrollInCourse(
+        currentUser._id,
+        courseId,
+      );
+      addEnrollment(enrollment);
+    });
+  const onUnenroll = (courseId: string) =>
+    run(async () => {
+      if (!currentUser) return;
+      await enrollmentsClient.unenrollFromCourse(currentUser._id, courseId);
+      removeEnrollment(currentUser._id, courseId);
+    });
   const [showAllCourses, setShowAllCourses] = useState(false);
   const isEnrolled = (courseId: string) =>
     enrollments.some(
@@ -59,7 +114,7 @@ export default function Dashboard() {
           type="button"
           className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white"
           id="wd-add-new-course-click"
-          onClick={() => addCourse(course)}
+          onClick={onAddCourse}
         >
           Add
         </button>
@@ -67,11 +122,16 @@ export default function Dashboard() {
           type="button"
           className="rounded bg-yellow-400 px-3 py-1.5 text-sm font-medium"
           id="wd-update-course-click"
-          onClick={() => updateCourse(course)}
+          onClick={onUpdateCourse}
         >
           Update
         </button>
       </h5>
+      {error && (
+        <div id="wd-dashboard-error" className="mb-2 rounded bg-red-100 p-2 text-red-800">
+          {error}
+        </div>
+      )}
       <input
         className="mb-2 mt-2 block w-full max-w-xl rounded border border-neutral-300 px-3 py-1.5"
         value={course.name}
@@ -112,10 +172,10 @@ export default function Dashboard() {
             key={c._id}
             {...c}
             onEdit={() => setCourse(c)}
-            onDelete={() => deleteCourse(c._id)}
+            onDelete={() => onDeleteCourse(c._id)}
             enrolled={currentUser ? isEnrolled(c._id) : null}
-            onEnroll={() => currentUser && enroll(currentUser._id, c._id)}
-            onUnenroll={() => currentUser && unenroll(currentUser._id, c._id)}
+            onEnroll={() => onEnroll(c._id)}
+            onUnenroll={() => onUnenroll(c._id)}
           />
         ))}
       </div>

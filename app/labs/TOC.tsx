@@ -8,10 +8,16 @@ const LINKS = [
   { href: "/labs/lab2", id: "wd-lab2-link", label: "Lab 2", match: (p: string) => p.includes("/lab2") },
   { href: "/labs/lab3", id: "wd-lab3-link", label: "Lab 3", match: (p: string) => p.includes("/lab3") },
   { href: "/labs/lab4", id: "wd-lab4-link", label: "Lab 4", match: (p: string) => p.includes("/lab4") },
+  { href: "/labs/lab5", id: "wd-lab5-link", label: "Lab 5", match: (p: string) => p.includes("/lab5") },
   { href: "https://kambaz.dev/book/ch1#sec-1-3", id: "wd-toc-book-link", label: "Chapter 1", match: () => false },
   { href: "/", id: "wd-kambaz-link", label: "Kambaz", match: () => false },
   { href: "https://kambaz.dev/book/ch3", id: "wd-book-ch3-link", label: "Book Ch3", match: () => false },
 ] as const;
+
+const CLIENT_REPO = "https://github.com/anshsarin13/webdev-client";
+const SERVER_REPO = "https://github.com/anshsarin13/webdev-server";
+const RENDER_URL =
+  process.env.NEXT_PUBLIC_HTTP_SERVER ?? "http://localhost:4000";
 
 const activeStyle = {
   backgroundColor: "#2563eb",
@@ -42,7 +48,24 @@ export default function TOC() {
           );
         })}
       </ul>
-      <p>Ansh Sarin doing lab 1 </p>
+      <p>Ansh Sarin</p>
+      <ul>
+        <li>
+          <a href={CLIENT_REPO} id="wd-github">
+            Client GitHub
+          </a>
+        </li>
+        <li>
+          <a href={SERVER_REPO} id="wd-server-github">
+            Server GitHub
+          </a>
+        </li>
+        <li>
+          <a href={RENDER_URL} id="wd-server-render">
+            Node Server
+          </a>
+        </li>
+      </ul>
     </nav>
   );
 }

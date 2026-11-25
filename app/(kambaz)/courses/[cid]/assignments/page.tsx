@@ -1,20 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import AssignmentItem from "./AssignmentItem";
 import DeleteAssignmentDialog from "./DeleteAssignmentDialog";
 import { useAssignmentsStore } from "../../../store/assignmentsStore";
+import * as client from "./client";
 
 export default function Assignments() {
   const { cid } = useParams();
   const courseId = typeof cid === "string" ? cid : "";
   const allAssignments = useAssignmentsStore((state) => state.assignments);
+  const setAssignments = useAssignmentsStore((state) => state.setAssignments);
   const deleteAssignment = useAssignmentsStore(
     (state) => state.deleteAssignment,
   );
   const [toDelete, setToDelete] = useState<string | null>(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    if (!courseId) return;
+    client
+      .findAssignmentsForCourse(courseId)
+      .then(setAssignments)
+      .catch(() => setError("Could not load assignments from the server"));
+  }, [courseId, setAssignments]);
+  const removeAssignment = async (assignmentId: string) => {
+    try {
+      await client.deleteAssignment(assignmentId);
+      deleteAssignment(assignmentId);
+      setError("");
+    } catch {
+      setError("Could not delete the assignment");
+    }
+  };
   const assignments = allAssignments.filter(
     (assignment) => assignment.course === courseId,
   );
@@ -47,6 +66,11 @@ export default function Assignments() {
           </Link>
         </div>
       </div>
+      {error && (
+        <div id="wd-assignments-error" className="mb-2 rounded bg-red-100 p-2 text-red-800">
+          {error}
+        </div>
+      )}
       <h3
         id="wd-assignments-title"
         className="mb-3 flex items-center justify-between rounded bg-neutral-200 p-3 text-lg"
@@ -76,7 +100,7 @@ export default function Assignments() {
         title={pending?.title ?? ""}
         onNo={() => setToDelete(null)}
         onYes={() => {
-          if (toDelete) deleteAssignment(toDelete);
+          if (toDelete) removeAssignment(toDelete);
           setToDelete(null);
         }}
       />

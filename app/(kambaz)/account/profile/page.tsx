@@ -2,20 +2,38 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAccountContext, type User } from "../AccountContext";
+import * as client from "../client";
 
 export default function Profile() {
   const [profile, setProfile] = useState<User | null>(null);
-  const { currentUser, setCurrentUser } = useAccountContext();
+  const [message, setMessage] = useState("");
+  const { currentUser, setCurrentUser, ready } = useAccountContext();
   const router = useRouter();
   useEffect(() => {
+    if (!ready) return;
     if (!currentUser) {
       router.push("/account/signin");
       return;
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(currentUser);
-  }, [currentUser, router]);
-  const signout = () => {
+  }, [currentUser, ready, router]);
+  const updateProfile = async () => {
+    if (!profile) return;
+    try {
+      const updated = await client.updateUser(profile);
+      setCurrentUser(updated);
+      setMessage("Profile updated");
+    } catch (e) {
+      setMessage(client.errorMessage(e, "Could not update the profile"));
+    }
+  };
+  const signout = async () => {
+    try {
+      await client.signout();
+    } catch (e) {
+      console.error("Signout request failed", e);
+    }
     setCurrentUser(null);
     router.push("/account/signin");
   };
@@ -71,6 +89,19 @@ export default function Profile() {
         <option value="FACULTY">Faculty</option>
         <option value="STUDENT">Student</option>
       </select>
+      {message && (
+        <div id="wd-profile-message" className="mb-2 rounded bg-blue-100 p-2 text-sm text-blue-900">
+          {message}
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={updateProfile}
+        id="wd-update-btn"
+        className="mb-2 block w-full cursor-pointer rounded bg-blue-600 px-3 py-2 text-center text-sm font-medium text-white"
+      >
+        Update
+      </button>
       <button
         type="button"
         onClick={signout}

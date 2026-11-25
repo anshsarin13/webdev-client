@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
   useAssignmentsStore,
   type Assignment,
 } from "../../../../store/assignmentsStore";
+import * as client from "../client";
 
 export default function AssignmentEditor() {
   const params = useParams();
@@ -32,17 +33,47 @@ export default function AssignmentEditor() {
       until: "",
     },
   );
-  const save = () => {
-    if (isNew) {
-      const { _id, ...rest } = draft;
-      void _id;
-      addAssignment({ ...rest, course: cid });
-    } else {
-      updateAssignment(draft);
+  const [loading, setLoading] = useState(!isNew && !assignment);
+  const [missing, setMissing] = useState(false);
+  const [error, setError] = useState("");
+  // Opening the editor directly (or refreshing) finds nothing in the store,
+  // so fetch the assignment by id from the server.
+  useEffect(() => {
+    if (isNew || assignment) return;
+    client
+      .findAssignmentById(aid)
+      .then((found) => {
+        setDraft(found);
+        setLoading(false);
+      })
+      .catch(() => {
+        setMissing(true);
+        setLoading(false);
+      });
+  }, [aid, assignment, isNew]);
+  const save = async () => {
+    try {
+      if (isNew) {
+        const { _id, ...rest } = draft;
+        void _id;
+        const created = await client.createAssignmentForCourse(cid, {
+          ...rest,
+          course: cid,
+        });
+        addAssignment(created);
+      } else {
+        const updated = await client.updateAssignment(draft);
+        updateAssignment(updated);
+      }
+      router.push(`/courses/${cid}/assignments`);
+    } catch {
+      setError("Could not save the assignment");
     }
-    router.push(`/courses/${cid}/assignments`);
   };
-  if (!isNew && !assignment) {
+  if (loading) {
+    return <div id="wd-assignments-editor">Loading assignment...</div>;
+  }
+  if (!isNew && missing) {
     return (
       <div id="wd-assignments-editor">
         <p>Assignment not found.</p>
@@ -223,6 +254,12 @@ export default function AssignmentEditor() {
       </table>
 
       <hr className="my-4 border-neutral-300" />
+
+      {error && (
+        <div id="wd-assignment-error" className="mb-2 rounded bg-red-100 p-2 text-sm text-red-800">
+          {error}
+        </div>
+      )}
 
       <div className="flex justify-end gap-2">
         <Link
